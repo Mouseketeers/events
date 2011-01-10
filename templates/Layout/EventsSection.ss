@@ -1,31 +1,15 @@
-<% include LeftMenu %>
-
-<% if CurrentFilter == aktuelle %>
-<h1>Aktuelle udstillinger</h1>
-<% control Events %>
-	<% include EventItem %>
-<% end_control %>
-
-<% else_if CurrentFilter == kommende %>
-<h1>Kommende udstillinger</h1>
-<% control UpcomingEvents %>
-	<% include EventItem %>
-<% end_control %>
-
-<% else_if CurrentFilter == web %>
-<h1>Webudstillinger</h1>
-<% control WebEvents %>
-	<% include EventItem %>
-<% end_control %>
-
-<% else %>
-<h1>Udstillinger</h1>
-<h2>Aktuelle udstillinger</h2>
-<% control Events %>
-	<% include EventItem %>
-<% end_control %>
-<h2>Kommende udstillinger</h2>
-<% control UpcomingEvents %>
-	<% include EventItem %>
-<% end_control %>
+<h1>$Title</h1>
+$Content
+<% if ContentList %>
+<div id="ContentList">
+	<% control ContentList %>
+	<div class="listItem clickable" onclick="location.href='$Link'">
+		<h2>$Title</h2>
+		<p class="date">$FromDate.Long - $ToDate.Long</p>
+		<p>$Image.SetWidth(80) $Content.firstParagraph</p>
+		<p><a href="$Link" class="readMore">Læs mere</a></p>
+	</div>
+	<% end_control %>
+	<% include Pagination %>
+</div>
 <% end_if %>
