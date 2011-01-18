@@ -3,12 +3,14 @@ class EventsWidget extends Widget {
 	static $db = array(
 		'WidgetTitle' => 'Varchar',
 		'NumberToShow' => 'Int',
-		'NoEventsMessage' => 'Varchar'
+		'NoEventsMessage' => 'Varchar',
+		'ExcludeOutdated' => 'Boolean'
 	);
 	static $defaults = array(
 		'WidgetTitle' => 'Events',
 		'NumberToShow' => 5,
-		'NoEMessage' => 'There is currently no events'
+		'NoEMessage' => 'There are currently no events',
+		'ExcludeOutdated' => '1'
 	);
 	static $title = 'Events';
 	static $cmsTitle = 'Events';
@@ -20,9 +22,17 @@ class EventsWidget extends Widget {
 			new TextField('NoEventsMessage', 'Message to show when there is no events')
 		);
 	}
-	function Events($num='',$parentID=''){
+	/*function Events($num='',$parentID=''){
 		$num = $num ? $num : $this->NumberToShow;
 		$data = DataObject::get('EventPage', 'FromDate IS NULL OR FromDate <= NOW()', 'FromDate DESC', '', $num);
+ 		return $data;
+	}*/
+	function Events($limit='',$parentID='') {
+		$limit = $limit ? $limit : $this->NumberToShow;
+		$filter = '';
+		if ($this->ExcludeOutdated) $filter = 'ToDate IS NULL OR ToDate >= NOW()';
+		/*$filter = 'FromDate IS NULL OR FromDate <= NOW()';*/
+		$data = DataObject::get('EventPage', $filter, 'FromDate DESC','',$limit);
  		return $data;
 	}
 	function Title() {

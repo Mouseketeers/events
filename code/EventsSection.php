@@ -10,7 +10,7 @@ class EventsSection extends Page {
 	//static $allowed_children = array('EventPage');
 	static $defaults = array(
 		'SortOrder' => 'FromDate',
-		'ExcludeOutdated' => '0'
+		'ExcludeOutdated' => '1'
 	);
  	static $default_child = 'EventPage';
  	static $icon  = 'events/images/eventssection';
@@ -50,57 +50,20 @@ class EventsSection extends Page {
 		return $fields;
 	}
 	
-	public function Events($num='', $parent='', $sort='FromDate DESC', $is_web_event=0, $is_permament_event=0) {
+	public function Events($num='', $parent='', $sort='FromDate DESC') {
 		$where = '(ToDate IS NULL OR ToDate >= NOW()) AND (FromDate IS NULL OR FromDate <= NOW())';
 		if ($parent) $where .= ' AND ParentID = '.$this->ID;
 		return DataObject::get('EventPage', $where, $sort, '', $num);
 		//return DataObject::get('EventPage', 'ParentID = '.$this->ID.' AND (FromDate > NOW())', 'FromDate DESC', '', $num);
 	}
-	public function UpcomingEvents($num='', $parent='', $sort='FromDate DESC', $is_web_event=0) {
+	public function UpcomingEvents($num='', $parent='', $sort='FromDate DESC') {
 		$where = 'FromDate > NOW() AND IsWebEvent = '.$is_web_event;
 		if ($parent) $where .= ' AND ParentID = '.$this->ID;
 		return DataObject::get('EventPage', $where, $sort, '', $num);
 	}
-	function EventFilters($num='', $parent='', $sort='FromDate DESC') {
-		//$filters =  array( array( 'MenuTitle' => 'test'), array( 'MenuTitle' => 'test') );
-		$filters = new DataObjectSet (
-			array(
-					array(
-						  'MenuTitle' => 'Aktuelle udstillinger',
-						  'LinkingMode' => $this->FilterLinkMode('aktuelle'),
-						  'Link' => $this->Link().'aktuelle'
-					),
-					array(
-						  'MenuTitle' => 'Kommende udstillinger',
-						  'LinkingMode' => $this->FilterLinkMode('kommende'),
-						  'Link' => $this->Link().'kommende'
-					),
-					array(
-						  'MenuTitle' => 'Webudstillinger',
-						  'LinkingMode' => $this->FilterLinkMode('web'),
-						  'Link' => $this->Link().'web'
-					),
-					array(
-						  'MenuTitle' => 'Dragtsamlinger',
-						  'LinkingMode' => $this->FilterLinkMode('samlinger'),
-						  'Link' => $this->Link().'samlinger'
-					)
-			)
-		);
-		return $filters;
-	}
-	public function FilterLinkMode($filter) {
-		return ($filter == Director::urlParam('Action')) ? 'current' : 'link';	
-	}
 
 }
 class EventsSection_Controller extends Section_Controller {
-	/*public function Events($num='', $parent='', $sort='FromDate DESC', $is_web_event=0, $is_permament_event=0) {
-		$where = '(ToDate IS NULL OR ToDate >= NOW()) AND (FromDate IS NULL OR FromDate <= NOW())';
-		if ($parent) $where .= ' AND ParentID = '.$this->ID;
-		return DataObject::get('EventPage', $where, $sort, '', $num);
-		//return DataObject::get('EventPage', 'ParentID = '.$this->ID.' AND (FromDate > NOW())', 'FromDate DESC', '', $num);
-	}*/
 	public function ContentList() {
 		$limit = '';
 		if($this->NumPages) {
@@ -109,7 +72,8 @@ class EventsSection_Controller extends Section_Controller {
 			$limit = $limit_start.','.$this->NumPages;
 		}
 		$filter = 'ParentID = '. $this->ID;
-		if ($this->ExcludeOutdated) $filter .= ' AND (ToDate IS NULL OR ToDate >= NOW()) AND (FromDate IS NULL OR FromDate <= NOW())';
+		//if ($this->ExcludeOutdated) $filter .= ' AND (ToDate IS NULL OR ToDate >= NOW()) AND (FromDate IS NULL OR FromDate <= NOW())';
+		if ($this->ExcludeOutdated) $filter .= ' AND ToDate IS NULL OR ToDate >= NOW()';
 		$data = DataObject::get('EventPage', $filter, $this->SortOrder,'',$limit);
 		return $data;
 	}
