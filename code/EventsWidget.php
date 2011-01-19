@@ -32,7 +32,7 @@ class EventsWidget extends Widget {
 		$filter = '';
 		if ($this->ExcludeOutdated) $filter = 'ToDate IS NULL OR ToDate >= NOW()';
 		/*$filter = 'FromDate IS NULL OR FromDate <= NOW()';*/
-		$data = DataObject::get('EventPage', $filter, 'FromDate DESC','',$limit);
+		$data = DataObject::get('EventPage', $filter, 'FromDate ASC','',$limit);
  		return $data;
 	}
 	function Title() {

@@ -74,7 +74,7 @@ class EventsSection_Controller extends Section_Controller {
 		$filter = 'ParentID = '. $this->ID;
 		//if ($this->ExcludeOutdated) $filter .= ' AND (ToDate IS NULL OR ToDate >= NOW()) AND (FromDate IS NULL OR FromDate <= NOW())';
 		if ($this->ExcludeOutdated) $filter .= ' AND ToDate IS NULL OR ToDate >= NOW()';
-		$data = DataObject::get('EventPage', $filter, $this->SortOrder,'',$limit);
+		$data = DataObject::get('EventPage', $filter, 'FromDate ASC','',$limit);
 		return $data;
 	}
 }

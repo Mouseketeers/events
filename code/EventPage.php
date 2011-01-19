@@ -31,17 +31,25 @@ class EventPage extends Page {
 		$fields->addFieldToTab('Root.Content.Main',new TextField('LinkText','Link Text'),'Content');
 		return $fields;
 	}
+	/*
+	 * Takes two dates and makes stuff like "17. - 18. January 2010"
+	 */
 	function NiceFromToDate() {
+		if (!$this->ToDate && $this->FromDate) return '';
+		
 		$from_date = new Date();
 		$to_date = new Date();
 		$from_date->setValue($this->FromDate);
 		$to_date->setValue($this->ToDate);
-		
+				
+		if (!$this->ToDate && $this->FromDate) return $from_date->FormatI18N('%e. %B %Y');
+
 		$from_month = $from_date->FormatI18N('%B');
 		$to_month = $to_date->FormatI18N('%B');
 		
 		$from_year = $from_date->Format('Y');
 		$to_year = $from_date->Format('Y');
+		
 		if($from_month == $to_month) {
 			$long_from_to_date = $from_date->Format('j. - ').$to_date->Format('j. ').$to_month.' '.$to_year;
 		}
