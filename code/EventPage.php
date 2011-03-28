@@ -22,8 +22,15 @@ class EventPage extends Page {
 	static $icon  = 'events/images/eventpage';
 	function getCMSFields() {
 		$fields = parent::getCMSFields();
-		$fields->addFieldToTab('Root.Content.Main',new CalendarDateField('FromDate','From'),'Content');
-		$fields->addFieldToTab('Root.Content.Main',new CalendarDateField('ToDate','To'),'Content');
+		
+		$from_date_field = new DateField('FromDate', _t('NewsPage.FROM','From'));
+		$from_date_field->setConfig('showcalendar',true);
+		
+		$to_date_field = new DateField('ToDate', _t('NewsPage.TO','To'));
+		$to_date_field->setConfig('showcalendar',true);
+		
+		$fields->addFieldToTab('Root.Content.Main',$from_date_field,'Content');
+		$fields->addFieldToTab('Root.Content.Main',$to_date_field,'Content');
 		$fields->addFieldToTab('Root.Content.Main',new TextField('Venue','Venue'),'Content');
 		$fields->addFieldToTab('Root.Content.Main',new TextField('City','City'),'Content');
 		$fields->addFieldToTab('Root.Content.Main',new TextField('Country','Country'),'Content');
