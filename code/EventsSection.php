@@ -9,7 +9,7 @@ class EventsSection extends Page {
 	static $has_one = array();
 	//static $allowed_children = array('EventPage');
 	static $defaults = array(
-		'SortOrder' => 'FromDate',
+		'SortOrder' => 'FromDate DESC',
 		'ExcludeOutdated' => '1'
 	);
  	static $default_child = 'EventPage';
@@ -63,7 +63,7 @@ class EventsSection extends Page {
 	}
 
 }
-class EventsSection_Controller extends Section_Controller {
+class EventsSection_Controller extends Page_Controller {
 	public function ContentList() {
 		$limit = '';
 		if($this->NumPages) {
@@ -74,7 +74,7 @@ class EventsSection_Controller extends Section_Controller {
 		$filter = 'ParentID = '. $this->ID;
 		//if ($this->ExcludeOutdated) $filter .= ' AND (ToDate IS NULL OR ToDate >= NOW()) AND (FromDate IS NULL OR FromDate <= NOW())';
 		if ($this->ExcludeOutdated) $filter .= ' AND ToDate IS NULL OR ToDate >= NOW()';
-		$data = DataObject::get('EventPage', $filter, 'FromDate ASC','',$limit);
+		$data = DataObject::get('EventPage', $filter, 'FromDate DESC','',$limit);
 		return $data;
 	}
 }
