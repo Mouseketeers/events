@@ -22,25 +22,17 @@ class EventsWidget extends Widget {
 			new TextField('NoEventsMessage', 'Message to show when there is no events')
 		);
 	}
-	/*function Events($num='',$parentID=''){
-		$num = $num ? $num : $this->NumberToShow;
-		$data = DataObject::get('EventPage', 'FromDate IS NULL OR FromDate <= NOW()', 'FromDate DESC', '', $num);
- 		return $data;
-	}*/
 	function Events($limit='',$parentID='') {
 		$limit = $limit ? $limit : $this->NumberToShow;
 		$filter = '';
-		if ($this->ExcludeOutdated) $filter = 'ToDate IS NULL OR ToDate >= NOW()';
-		/*$filter = 'FromDate IS NULL OR FromDate <= NOW()';*/
+		if ($this->ExcludeOutdated) $filter = '(FromDate IS NULL OR FromDate >= NOW() - INTERVAL 1 DAY) AND (ToDate IS NULL OR ToDate >= NOW() - INTERVAL 1 DAY)';
 		$data = DataObject::get('EventPage', $filter, 'FromDate ASC','',$limit);
  		return $data;
 	}
 	function Title() {
-		return $this->WidgetTitle ? $this->WidgetTitle : self::$title;
+		return $this->WidgetTitle;
 	}
 	function NoEventsMessage() {
 		return $this->NoEventsMessage;
 	}
 }
-
-?>
