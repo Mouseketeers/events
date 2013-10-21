@@ -3,12 +3,13 @@ class EventPage extends Page {
 	static $db = array(
 		'FromDate' => 'Date',
 		'ToDate' => 'Date',
+		'Time' => 'Varchar',
 		'Venue' => 'Text',
 		'City' => 'Varchar',
 		'Country' => 'Varchar',
-
 		'ExternalLink' => 'Varchar',
-		'LinkText' => 'Varchar'
+		'LinkText' => 'Varchar',
+		'Abstract' => 'Text'
 	);
 	static $has_one = array (
 	);
@@ -23,19 +24,21 @@ class EventPage extends Page {
 	function getCMSFields() {
 		$fields = parent::getCMSFields();
 		
-		$from_date_field = new DateField('FromDate', _t('NewsPage.FROM','From'));
+		$from_date_field = new DateField('FromDate', _t('NewsPage.FROM','From date'));
 		$from_date_field->setConfig('showcalendar',true);
 		
-		$to_date_field = new DateField('ToDate', _t('NewsPage.TO','To'));
+		$to_date_field = new DateField('ToDate', _t('NewsPage.TO','To date'));
 		$to_date_field->setConfig('showcalendar',true);
 		
 		$fields->addFieldToTab('Root.Content.Main',$from_date_field,'Content');
 		$fields->addFieldToTab('Root.Content.Main',$to_date_field,'Content');
+		$fields->addFieldToTab('Root.Content.Main',new TextField('Time','Time (e.g. 16.00 - 18.00)'),'Content');
 		$fields->addFieldToTab('Root.Content.Main',new TextField('Venue','Venue'),'Content');
 		$fields->addFieldToTab('Root.Content.Main',new TextField('City','City'),'Content');
-		$fields->addFieldToTab('Root.Content.Main',new TextField('Country','Country'),'Content');
-		$fields->addFieldToTab('Root.Content.Main',new TextField('ExternalLink','Link'),'Content');
-		$fields->addFieldToTab('Root.Content.Main',new TextField('LinkText','Link Text'),'Content');
+		//$fields->addFieldToTab('Root.Content.Main',new TextField('Country','Country'),'Content');
+		//$fields->addFieldToTab('Root.Content.Main',new TextField('ExternalLink','Link to external site (e.g. http://www.example.com)'),'Content');
+		//$fields->addFieldToTab('Root.Content.Main',new TextField('LinkText','Link Text'),'Content');
+		$fields->addFieldToTab('Root.Content.Main',new TextAreaField('Abstract','Abstract'),'Content');
 		return $fields;
 	}
 	/*
